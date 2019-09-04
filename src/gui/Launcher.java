@@ -4,10 +4,10 @@ import java.io.IOException;
 
 public class Launcher {
 	
+	@SuppressWarnings("static-access")
 	public static void main(String [] args) throws IOException {
-		TestBoard panel = new TestBoard();  
-	    panel.setResizable(false);
-	    panel.setVisible(true);
+		UserInterface connect4UI = new UserInterface();
+		connect4UI.runGame();
 	}
 
 }
