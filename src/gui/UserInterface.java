@@ -39,10 +39,10 @@ public class UserInterface {
 	
 	public static JLayeredPane createLayeredBoard() {
 		layeredGameBoard = new JLayeredPane();
-		layeredGameBoard.setPreferredSize(new Dimension(570, 490));
+		layeredGameBoard.setPreferredSize(new Dimension(740, 640));
 		layeredGameBoard.setBorder(BorderFactory.createTitledBorder("Connect-4"));
 
-		ImageIcon imageBoard = new ImageIcon(Resource.load("images/Board.gif"));
+		ImageIcon imageBoard = new ImageIcon("C:\\Users\\Hp\\Games\\Connect-4-Game\\res\\images\\Board1.gif");
 		JLabel imageBoardLabel = new JLabel(imageBoard);
 
 		imageBoardLabel.setBounds(20, 20, imageBoard.getIconWidth(), imageBoard.getIconHeight());
@@ -61,6 +61,7 @@ public class UserInterface {
 		
 		mainGameWindow = new JFrame("Connect-4 Game");
 		Component mainWindowComponent = creatContentComponent();
+		mainGameWindow.getContentPane().add(mainWindowComponent, BorderLayout.CENTER);
 		
 		mainGameWindow.setFocusable(true);
 		mainGameWindow.pack();
@@ -72,7 +73,7 @@ public class UserInterface {
 		int xlineOffset = 96 * col;
 		int ylineOffset = 96 * row;
 		
-		ImageIcon playerImageCircle = new ImageIcon(Resource.load("res/"+color.toString()+".gif"));
+		ImageIcon playerImageCircle = new ImageIcon(Resource.load("res/images"+color.toString()+".gif"));
 		JLabel circleLabel = new JLabel(playerImageCircle);
 		circleLabel.setBounds(50+xlineOffset, 50+ylineOffset, playerImageCircle.getIconWidth(), playerImageCircle.getIconHeight());
 		layeredGameBoard.add(circleLabel, 0, 0);
@@ -154,7 +155,7 @@ public class UserInterface {
 		boardMainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		boardMainPanel.add(columnPanel, BorderLayout.NORTH);
 		boardMainPanel.add(layeredGameBoard, BorderLayout.CENTER);
-		return null;
+		return boardMainPanel;
 	}
 	
 	public static void computerMove() {
