@@ -4,120 +4,103 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MiniMax {
+	
+	private int maxDepth;
+	
+	private int aiLetter;
 
-		int maxDepth=3;
-		int aiPlayer=0;
-		//int aiPlayer_2=1;
+	
+	public MiniMax() {
+		maxDepth = 4;
+		aiLetter = Constants.O;
+	}
 		
-		public MiniMax(int maxDepth,int aiPlayer_1)
-		{
-			this.maxDepth=maxDepth;
-			this.aiPlayer=aiPlayer_1;
-		//	this.aiPlayer_2=aiPlayer_2;
-		}
+	public MiniMax(int maxDepth, int aiLetter) {
+		this.maxDepth = maxDepth;
+		this.aiLetter = aiLetter;
+	}
 
-		public int getMaxDepth() {
-			return maxDepth;
-		}
+	public int getMaxDepth() {
+		return maxDepth;
+	}
 
-		public void setMaxDepth(int maxDepth) {
-			this.maxDepth = maxDepth;
-		}
+	public void setMaxDepth(int maxDepth) {
+		this.maxDepth = maxDepth;
+	}
 
-		public int getAiPlayer_1() {
-			return aiPlayer;
-		}
+	public int getAiLetter() {
+		return aiLetter;
+	}
 
-		public void setAiPlayer_1(int aiPlayer_1) {
-			this.aiPlayer = aiPlayer_1;
-		}
+	public void setAiLetter(int aiLetter) {
+		this.aiLetter = aiLetter;
+	}
 
-		
-		//Initialize the miniMax algorithm
-		
-		public Move miniMax(ConsoleBoard board)
-		{
-			if(aiPlayer==1) {
-				return max(new ConsoleBoard(board), 0); // 0 is the exit point of minimax alogorithm
+	public Move miniMax(Board board) {
+	        if (aiLetter == Constants.X) {
+	            return max(new Board(board), 0);
+	        }
+	        else {
+	            return min(new Board(board), 0);
+	        }
+		}
+	public Move max(Board board, int depth) {	       
+		Random r = new Random();
+
+		if((board.checkGameOver()) || (depth == maxDepth)) {
+			Move lastMove = new Move(board.getLastMove().getRow(), board.getLastMove().getCol(), board.evaluate());
+			return lastMove;
+		}
+        
+		ArrayList<Board> children = new ArrayList<Board>(board.getChildren(Constants.X));
+		Move maxMove = new Move(Integer.MIN_VALUE);
+		for (Board child : children) {
+			Move move = min(child, depth + 1);
+			if(move.getValue() >= maxMove.getValue()) {
+                if ((move.getValue() == maxMove.getValue())) {
+                    if (r.nextInt(2) == 0) {
+                        maxMove.setRow(child.getLastMove().getRow());
+                        maxMove.setCol(child.getLastMove().getCol());
+                        maxMove.setValue(move.getValue());
+                    }
+                }
+                else {
+                    maxMove.setRow(child.getLastMove().getRow());
+                    maxMove.setCol(child.getLastMove().getCol());
+                    maxMove.setValue(move.getValue());
+                }
 			}
-			else
-				return min(new ConsoleBoard(board),0);
-			
 		}
+		return maxMove;
+	}
 
-		private Move min(ConsoleBoard board, int depth) {
-			// TODO Auto-generated method stub
-			
-			int player_2=1;
-			ArrayList<ConsoleBoard> children = new ArrayList<ConsoleBoard>(board.getChild(player_2));
-			Random random = new Random();
-			if(board.checkGameOver()||depth==maxDepth)
-			{
-				Move lastMove = new Move(board.getLastMove().getRow(), board.getLastMove().getCol(), board.evaluate());
-				return lastMove;
-			}
-			Move minMove= new Move(999999999);
-			
-			for(ConsoleBoard successor:children)
-			{
-				Move move = max(successor, depth + 1);
-				if(move.getValue()>=minMove.getValue())
-				{
-					if(move.getValue()==minMove.getValue())
-					{
-						if (random.nextInt(2) == 0) {
-							minMove.setRow(successor.getLastMove().getRow());
-							minMove.setCol(successor.getLastMove().getCol());
-							minMove.setValue(move.getValue());
-	                    }
-						
-						else
-						{
-							minMove.setRow(successor.getLastMove().getRow());
-							minMove.setCol(successor.getLastMove().getCol());
-							minMove.setValue(move.getValue());	
-						}
-					}
-				}
-			}
-			return minMove;
-			
-		}
+	public Move min(Board board, int depth) {
+        Random r = new Random();
 
-		private Move max(ConsoleBoard board, int depth) {
-			// TODO Auto-generated method stub
-			int player_1=0;
-			ArrayList<ConsoleBoard> children = new ArrayList<ConsoleBoard>(board.getChild(player_1));
-			Random random = new Random();
-			if(board.checkGameOver()||depth==maxDepth)
-			{
-				Move lastMove = new Move(board.getLastMove().getRow(), board.getLastMove().getCol(), board.evaluate());
-				return lastMove;
-			}
-			Move maxMove= new Move(-999999999);
-			
-			for(ConsoleBoard successor:children)
-			{
-				Move move = min(successor, depth + 1);
-				if(move.getValue()>=maxMove.getValue())
-				{
-					if(move.getValue()==maxMove.getValue())
-					{
-						if (random.nextInt(2) == 0) {
-	                        maxMove.setRow(successor.getLastMove().getRow());
-	                        maxMove.setCol(successor.getLastMove().getCol());
-	                        maxMove.setValue(move.getValue());
-	                    }
-						
-						else
-						{
-							  maxMove.setRow(successor.getLastMove().getRow());
-		                      maxMove.setCol(successor.getLastMove().getCol());
-		                      maxMove.setValue(move.getValue());	
-						}
-					}
-				}
-			}
-			return maxMove;
+		if((board.checkGameOver()) || (depth == maxDepth)) {
+			Move lastMove = new Move(board.getLastMove().getRow(), board.getLastMove().getCol(), board.evaluate());
+			return lastMove;
 		}
+		ArrayList<Board> children = new ArrayList<Board>(board.getChildren(Constants.O));
+		Move minMove = new Move(Integer.MAX_VALUE);
+		for (Board child : children) {
+			Move move = max(child, depth + 1);
+			if(move.getValue() <= minMove.getValue()) {
+                if ((move.getValue() == minMove.getValue())) {
+                    if (r.nextInt(2) == 0) {
+                        minMove.setRow(child.getLastMove().getRow());
+                        minMove.setCol(child.getLastMove().getCol());
+                        minMove.setValue(move.getValue());
+                    }
+                }
+                else {
+                        minMove.setRow(child.getLastMove().getRow());
+                        minMove.setCol(child.getLastMove().getCol());
+                        minMove.setValue(move.getValue());
+                }
+            }
+        }
+        return minMove;
+	}
+	
 }
